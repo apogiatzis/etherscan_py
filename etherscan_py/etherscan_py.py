@@ -1,9 +1,7 @@
 import requests
-import IPython
 import copy
 from threading import Thread, Lock
 import itertools
-from toolz import partition
 
 class EtherscanEvent:
     def __init__(self, event):
@@ -68,6 +66,7 @@ class Client:
     def __init__(self, api_key, network="mainnet"):
         self.api_key = api_key
         self.session = requests.Session()
+        self.session.headers.update({'User-Agent': 'Whatever'})
 
         valid_networks = ["mainnet", "ropnet", "kovan", "goerli", "rinkeby"]
         if network not in valid_networks:
@@ -297,3 +296,8 @@ class Client:
             return events
         else:
             return get_events(address, last_height, to_block, args, events)
+
+if __name__ == "__main__":
+    API_KEY="96BZQVDCQTUII3WX8Y3IMRV6BR12THD1IP"
+    client = Client(API_KEY,network="goerli")
+    client.get_all_transactions(from_address="0xc6Fd786bB7416ece05e6691eE4967ad062393842", status=2)
