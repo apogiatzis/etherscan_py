@@ -65,16 +65,18 @@ def chunks(start, end, n):
     return list(map(lambda x: (x[0], x[-1]),res))
 
 class Client:
-    def __init__(self, api_key):
+    def __init__(self, api_key, network="mainnet"):
         self.api_key = api_key
         self.session = requests.Session()
-    
-    def get(self, module, action, network="mainnet", extra_data=""):
+
         valid_networks = ["mainnet", "ropnet", "kovan", "goerli", "rinkeby"]
         if network not in valid_networks:
             raise ValueError("Invalid network choice '{0}'".format(network))
-
-        url_prefix = "api" if network == "mainnet" else "api-" + network
+        
+        self.network = network
+    
+    def get(self, module, action,  extra_data=""):
+        url_prefix = "api" if self.network == "mainnet" else "api-" + self.network
         url = f"http://{url_prefix}.etherscan.io/api?module={module}&action={action}&{extra_data}&apikey={self.api_key}"
         r = self.session.get(url)
         if r.status_code == 200:
