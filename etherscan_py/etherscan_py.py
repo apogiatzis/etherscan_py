@@ -52,8 +52,8 @@ class EtherscanTransaction:
         self.gas_used = gas_used
 
     def __hash__(self):
-        return self.txhash
-        
+        return int(self.txhash[2:], 16)
+
 def chunks(start, end, n):
     l = range(start, end+1)
     res = []
